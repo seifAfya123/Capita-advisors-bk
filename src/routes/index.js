@@ -17,7 +17,7 @@ router.use("/api/companies", companyRoutes);
 // ! Auth ____________
 router.use("/api/admin", authRoutes);
 // ! Contact Requstes ____________
-router.use("/api/requests", contactRoutes);
+router.use("/api/contact", contactRoutes);
 // ! Blogs ____________
 router.use("/api/blogs", blogsRoutes);
 
