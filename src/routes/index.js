@@ -9,16 +9,16 @@ const servicesRoutes = require("./services");
 router.get("/", (req, res) => res.status(200).json({ message: "hellow" }));
 
 // ! service ____________
-router.use("api/services", servicesRoutes);
+router.use("/api/services", servicesRoutes);
 // ! MetaData ____________
-router.use("api/metadata", metaRoutes);
+router.use("/api/metadata", metaRoutes);
 // ! Company ____________
-router.use("api/companies", companyRoutes);
+router.use("/api/companies", companyRoutes);
 // ! Auth ____________
-router.use("api/admin", authRoutes);
+router.use("/api/admin", authRoutes);
 // ! Contact Requstes ____________
-router.use("api/requests", contactRoutes);
+router.use("/api/requests", contactRoutes);
 // ! Blogs ____________
-router.use("api/blogs", blogsRoutes);
+router.use("/api/blogs", blogsRoutes);
 
 module.exports = router;
