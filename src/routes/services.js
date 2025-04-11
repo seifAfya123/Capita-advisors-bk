@@ -5,6 +5,8 @@ const midleware = require("../middlewares/authMiddleware");
 
 
 
+router.get("/client/", serviceController.getAllServices);
+router.get("/client/:serviceId", serviceController.clientgetServiceDetails);
 
 
 router.post("/", midleware, serviceController.createService);
