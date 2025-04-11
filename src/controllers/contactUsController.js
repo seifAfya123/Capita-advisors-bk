@@ -1,6 +1,19 @@
 const ContactUs = require("../models/contactUs");
+const validator = require("../validations/contactValidation");
 
 exports.sendContactRequest = async (req, res) => {
+  // const { error, value } = validator.contactRequestSchema.validate(req.body, {
+  //   abortEarly: false,
+  // });
+
+  // if (error) {
+  //   const errors = error.details.map((detail) => ({
+  //     field: detail.path[0],
+  //     message: detail.message,
+  //   }));
+  //   return res.status(400).json({ errors });
+  // }
+
   try {
     const { name, email, phone, country, service } = req.body;
     const contactRequest = new ContactUs({
@@ -8,11 +21,13 @@ exports.sendContactRequest = async (req, res) => {
       email,
       phone,
       country,
-      service: service || "Normal Request", 
+      service: service || "Normal Request",
     });
 
     await contactRequest.save();
-    res.status(201).json({ message: "Contact request sent successfully", contactRequest });
+    res
+      .status(201)
+      .json({ message: "Contact request sent successfully", contactRequest });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -24,7 +39,11 @@ exports.getContactRequests = async (req, res) => {
     let filter = {};
 
     if (service) filter.service = service;
-    if (date) filter.date = { $gte: new Date(date).setHours(0, 0, 0), $lt: new Date(date).setHours(23, 59, 59) };
+    if (date)
+      filter.date = {
+        $gte: new Date(date).setHours(0, 0, 0),
+        $lt: new Date(date).setHours(23, 59, 59),
+      };
     if (stared !== undefined) filter.stared = stared === "true";
 
     const contactRequests = await ContactUs.find(filter);
@@ -39,12 +58,18 @@ exports.toggleStarredStatus = async (req, res) => {
     const { requestId } = req.params;
     const contactRequest = await ContactUs.findById(requestId);
 
-    if (!contactRequest) return res.status(404).json({ message: "Contact request not found" });
+    if (!contactRequest)
+      return res.status(404).json({ message: "Contact request not found" });
 
     contactRequest.stared = !contactRequest.stared;
     await contactRequest.save();
 
-    res.status(200).json({ message: "Request status updated", stared: contactRequest.stared });
+    res
+      .status(200)
+      .json({
+        message: "Request status updated",
+        stared: contactRequest.stared,
+      });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

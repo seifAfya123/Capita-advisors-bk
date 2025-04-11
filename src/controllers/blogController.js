@@ -69,7 +69,7 @@ exports.getBlogByIdAdmin = async (req, res) => {
 
 // ___________________________Client_______________
 
-exports.getAllBlogs = async (req, res) => {
+exports.getAllBlogs= async (req, res) => {
   try {
     const { language } = req.query;
 
@@ -122,7 +122,7 @@ exports.getBlogById = async (req, res) => {
 
 exports.getRecentBlogs = async (req, res) => {
   try {
-    const { language, limit = 5 } = req.query;
+    const { language, limit = 3 } = req.query;
 
     if (language && !["en", "ar"].includes(language)) {
       return res

@@ -17,8 +17,8 @@ router.get("/:id",authMiddleware, blogController.getBlogByIdAdmin); // Delete bl
 //!__________ Client Side ____________
 // Get blog By ID
 // Get All blogs
-// Get Recent blogs
-router.get("/clinet/", blogController.getAllBlogs); // Get all blogs
-router.get("/clinet/:id", blogController.getBlogById); // Get single blog by ID
-router.get("/clinet/recent", blogController.getRecentBlogs);
+// // Get Recent blogs
+// router.get("/client/", blogController.getAllBlogs);
+// router.get("/clinet/:id", blogController.getBlogById); 
+// router.get("/clinet/recent", blogController.getRecentBlogs);
 module.exports = router;
