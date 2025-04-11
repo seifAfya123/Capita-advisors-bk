@@ -122,27 +122,36 @@ exports.getBlogById = async (req, res) => {
 
 exports.getRecentBlogs = async (req, res) => {
   try {
-    const { language, limit = 3 } = req.query;
+    const { language = "en", limit = 3 } = req.query;
 
-    if (language && !["en", "ar"].includes(language)) {
+    if (!["en", "ar"].includes(language)) {
       return res
         .status(400)
         .json({ message: 'Invalid language. Choose "en" or "ar".' });
     }
 
-    const filter = language
-      ? {
-          [`title.${language}`]: { $exists: true },
-          [`description.${language}`]: { $exists: true },
-          [`brief.${language}`]: { $exists: true },
-        }
-      : {};
+    const filter = {
+      [`title.${language}`]: { $exists: true },
+      [`description.${language}`]: { $exists: true },
+      [`brief.${language}`]: { $exists: true },
+    };
 
     const recentBlogs = await Blog.find(filter)
       .sort({ createdAt: -1 })
       .limit(parseInt(limit));
-    res.status(200).json(recentBlogs);
+
+    const transformedBlogs = recentBlogs.map((blog) => ({
+      title: blog.title[language],
+      description: blog.description[language],
+      brief: blog.brief[language],
+      image: blog.image,
+      _id: blog._id, // optional: include ID if needed for linking
+      createdAt: blog.createdAt, // optional
+    }));
+
+    res.status(200).json(transformedBlogs);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+

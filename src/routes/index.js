@@ -12,7 +12,6 @@ router.get("/", (req, res) => res.status(200).json({ message: "hellow" }));
 
 // ! service ____________
 router.use("/api/services", servicesRoutes);
-router.use("/api/services/clinet", clinetServicesRoutes);
 // ! MetaData ____________
 router.use("/api/metadata", metaRoutes);
 // ! Company ____________
@@ -23,6 +22,5 @@ router.use("/api/admin", authRoutes);
 router.use("/api/contact", contactRoutes);
 // ! Blogs ____________
 router.use("/api/blogs", blogsRoutes);
-router.use("/api/clinet-blogs", clientblogsRoutes);
 
 module.exports = router;
