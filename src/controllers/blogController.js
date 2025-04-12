@@ -18,8 +18,22 @@ exports.createBlog = async (req, res) => {
 };
 
 exports.getAllBlogsAdmin = async (req, res) => {
+  const { search } = req.query; // use query, not params
+
   try {
-    const blogs = await Blog.find();
+    let filter = {};
+
+    if (search) {
+      // Search by title in either English or Arabic (case-insensitive)
+      filter = {
+        $or: [
+          { "title.en": { $regex: search, $options: "i" } },
+          { "title.ar": { $regex: search, $options: "i" } }
+        ]
+      };
+    }
+
+    const blogs = await Blog.find(filter);
     res.status(200).json(blogs);
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -37,8 +37,21 @@ exports.deleteService = async (req, res) => {
 };
 
 exports.getAllServices = async (req, res) => {
+  const { search } = req.query; // use query, not params
+
   try {
-    const services = await Service.find().select("name_en name_ar image brief_ar brief_en");
+    let filter = {};
+
+    if (search) {
+      // Search by title in either English or Arabic (case-insensitive)
+      filter = {
+        $or: [
+          { "name_en": { $regex: search, $options: "i" } },
+          { "name_ar": { $regex: search, $options: "i" } }
+        ]
+      };
+    }
+    const services = await Service.find(filter).select("name_en name_ar image brief_ar brief_en");
     res.status(200).json(services);
   } catch (error) {
     res.status(500).json({ error: error.message });

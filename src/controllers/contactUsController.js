@@ -15,7 +15,13 @@ exports.sendContactRequest = async (req, res) => {
   // }
 
   try {
+    console.log(req.body);
+    
     const { name, email, phone, country, service } = req.body;
+    // country=country.toLowerCase()
+    // service=service.toLowerCase()
+    // email=email.toLowerCase()
+    // name=name.toLowerCase()
     const contactRequest = new ContactUs({
       name,
       email,
@@ -29,16 +35,19 @@ exports.sendContactRequest = async (req, res) => {
       .status(201)
       .json({ message: "Contact request sent successfully", contactRequest });
   } catch (error) {
+    console.log(error.message);
+    
     res.status(500).json({ error: error.message });
   }
 };
 
 exports.getContactRequests = async (req, res) => {
   try {
-    const { service, date, stared } = req.query;
+    const { service, date, stared, country } = req.query;
     let filter = {};
 
-    if (service) filter.service = service;
+    if (country) filter.country = country.toLowerCase();
+    if (service) filter.service = service.toLowerCase();
     if (date)
       filter.date = {
         $gte: new Date(date).setHours(0, 0, 0),
@@ -46,7 +55,7 @@ exports.getContactRequests = async (req, res) => {
       };
     if (stared !== undefined) filter.stared = stared === "true";
 
-    const contactRequests = await ContactUs.find(filter);
+    const contactRequests = await ContactUs.find(filter).sort({ date: -1 }); 
     res.status(200).json(contactRequests);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -64,12 +73,10 @@ exports.toggleStarredStatus = async (req, res) => {
     contactRequest.stared = !contactRequest.stared;
     await contactRequest.save();
 
-    res
-      .status(200)
-      .json({
-        message: "Request status updated",
-        stared: contactRequest.stared,
-      });
+    res.status(200).json({
+      message: "Request status updated",
+      stared: contactRequest.stared,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

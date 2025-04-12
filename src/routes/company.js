@@ -1,9 +1,17 @@
 // Company Routes
 const companyController = require("../controllers/companyController");
-const router = require("express").Router()
+const router = require("express").Router();
+const middlewares = require("../middlewares/authMiddleware");
 
-router.post("/", companyController.createCompany);
-router.get("/", companyController.getAllCompanies);
-router.patch("/:companyId/status", companyController.changeCompanyStatus);
+router.post("/admin/", middlewares, companyController.createCompany);
+router.get("/admin/", middlewares, companyController.getAllCompanies);
+router.delete("/admin/:companyId", middlewares, companyController.deleteCompany);
+router.put(
+  "/admin/:companyId",
+  middlewares,
+  companyController.changeCompanyStatus
+);
 
-module.exports= router
+router.get("/clinet/", companyController.clientgetAllCompanies);
+router.get("/clinet/:companyId", companyController.getCompanyDetails);
+module.exports = router;
